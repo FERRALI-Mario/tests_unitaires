@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Générer les données de test
-./generate_test_data.sh
+./tests/data_tests.sh
 
 # Exécuter le script principal avec le fichier de test comme argument
-./script.sh TestEnregistrement.csv
+./script.sh tests/data_test.csv
 
 # Lire le fichier de sortie
 output_file="Resultat.csv"
