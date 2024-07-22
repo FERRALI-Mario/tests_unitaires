@@ -46,6 +46,7 @@ initialize_user() {
     users[$uuid,done_assis_n2]=0
     users[$uuid,done_allonge_n2]=0
     users[$uuid,increment_done]=0
+    users[$uuid,life_counter_started]=0
 }
 
 # Lire le fichier CSV ligne par ligne en ignorant l'en-tête
@@ -63,8 +64,29 @@ do
     # Initialiser les variables pour chaque utilisateur si elles n'existent pas
     [[ -z "${users[$uuid,vies]}" ]] && initialize_user "$uuid"
 
-    # Vérifier si un nouveau jour a commencé
-    if ((timestamp / seconds_in_a_day > users[$uuid,last_timestamp] / seconds_in_a_day)); then
+    # Calculer le nombre de jours écoulés depuis la dernière activité
+    days_passed=$(( (timestamp - users[$uuid,last_timestamp]) / seconds_in_a_day ))
+
+ # Si plus d'un jour s'est écoulé, vérifier la perte de vies
+    if (( days_passed > 0 )); then
+        if [[ "$uuid" == "012" ]]; then
+            echo "$days_passed"
+        fi
+        if [[ ${users[$uuid,life_counter_started]} -eq 1 ]]; then
+            # Décrémenter les vies en fonction des jours passés
+            for ((i = 1; i <= days_passed; i++)); do
+                if (( users[$uuid,vies] > 0 )); then
+                    ((users[$uuid,vies]--))
+                fi
+            done
+
+            # Si toutes les vies sont perdues, réinitialiser la série et les vies
+            if (( users[$uuid,vies] <= 0 )); then
+                users[$uuid,serie]=0
+                users[$uuid,vies]=$max_vies
+            fi
+        fi
+        users[$uuid,life_counter_started]=1
         users[$uuid,increment_done]=0
         users[$uuid,done_assis_n1]=0
         users[$uuid,done_allonge_n1]=0
@@ -88,6 +110,7 @@ do
         ((users[$uuid,consecutive_days] % 5 == 0 && users[$uuid,vies] < max_vies)) && ((users[$uuid,vies]++))
         ((users[$uuid,serie]++))
         users[$uuid,increment_done]=1
+        users[$uuid,life_counter_started]=0  # Reset life counter
     elif [[ ${users[$uuid,increment_done]} -eq 0 ]]; then
         users[$uuid,consecutive_days]=0
     fi

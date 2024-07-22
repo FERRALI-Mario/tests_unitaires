@@ -28,49 +28,53 @@ check_result() {
     fi
 }
 
-# Fonction pour exécuter un test complet pour 3 jours
+# Fonction pour exécuter un test complet pour plusieurs jours
 run_test() {
     local test_name=$1
     local user=$2
-    local expected_series_day1=$3
-    local expected_series_day2=$4
-    local expected_series_day3=$5
+    shift 2
+    local expected_series_days=("$@")
 
-    local timestamp_day1=$((1618937885))
-    local timestamp_day2=$((1618937885 + 60 * 60 * 24))
-    local timestamp_day3=$((1618937885 + 2 * 60 * 60 * 24))
-    local formatted_date1=$(date -d @$timestamp_day1 +"%d-%m-%Y")
-    local formatted_date2=$(date -d @$timestamp_day2 +"%d-%m-%Y")
-    local formatted_date3=$(date -d @$timestamp_day3 +"%d-%m-%Y")
+    local day_offset=0
+    for expected_series in "${expected_series_days[@]}"; do
+        local timestamp=$((1618937885 + day_offset * 60 * 60 * 24))
+        local formatted_date=$(date -d @$timestamp +"%d-%m-%Y")
 
-    check_result $expected_series_day1 $user $formatted_date1
-    local result_day1=$?
-    check_result $expected_series_day2 $user $formatted_date2
-    local result_day2=$?
-    check_result $expected_series_day3 $user $formatted_date3
-    local result_day3=$?
+        check_result $expected_series $user $formatted_date
+        if [[ $? -ne 0 ]]; then
+            echo -e "[${red}KO${no_color}] Test : $test_name - Échec au jour $formatted_date"
+            ((failed_tests++))
+            return
+        fi
+        ((day_offset++))
+    done
 
-    if [[ $result_day1 -eq 0 && $result_day2 -eq 0 && $result_day3 -eq 0 ]]; then
-        echo -e "[${green}OK${no_color}] Test : $test_name"
-    else
-        echo -e "[${red}KO${no_color}] Test : $test_name"
-        [[ $result_day1 -ne 0 ]] && echo "   Échec au jour $formatted_date1"
-        [[ $result_day2 -ne 0 ]] && echo "   Échec au jour $formatted_date2"
-        [[ $result_day3 -ne 0 ]] && echo "   Échec au jour $formatted_date3"
-        ((failed_tests++))
-    fi
+    echo -e "[${green}OK${no_color}] Test : $test_name"
 }
 
-# Exécuter les 5 tests
-run_test "1 exercice niveau 2 assis et 1 exercice niveau 2 allongé" "001" 1 2 3
-run_test "1 exercice niveau 2 assis et 2 exercices niveau 1 allongé" "002" 1 2 3
-run_test "2 exercices niveau 1 assis et 1 exercice niveau 2 allongé" "003" 1 2 3
-run_test "2 exercices niveau 1 assis et 2 exercices niveau 1 allongé" "004" 1 2 3
-run_test "Vérifier qu'une série ne peut pas être incrémentée deux fois le même jour" "005" 1 2 3
+# Exécuter les tests
+echo -e "Exécution des tests...\n"
+echo -e "PARTIE 1: Vérification des séries de base\n"
+run_test "Augmentation de la série : un exercice niveau 2 assis et un exercice niveau 2 allongé" "001" 1 2 3
+run_test "Augmentation de la série : un exercice niveau 2 assis et deux exercices niveau 1 allongé" "002" 1 2 3
+run_test "Augmentation de la série : deux exercices niveau 1 assis et un exercice niveau 2 allongé" "003" 1 2 3
+run_test "Augmentation de la série : deux exercices niveau 1 assis et deux exercices niveau 1 allongé" "004" 1 2 3
+run_test "Perte de la série : un exercice niveau 1 assis et aucun exercice allongé" "005" 0 0 0
+run_test "Perte de la série : aucun exercice assis et un exercice niveau 1 allongé" "006" 0 0 0
+run_test "Perte de la série : un exercice niveau 2 assis et un exercice niveau 1 allongé" "007" 0 0 0
+run_test "Perte de la série : un exercice niveau 1 assis et un exercice niveau 2 allongé" "008" 0 0 0
+run_test "Vérification : qu'une série ne peut pas être incrémentée deux fois le même jour" "009" 1 2 3
+
+echo -e "\nPARTIE 2: Vérification du système de vie sur plusieurs jours\n"
+run_test "Augmentation de la série : faire deux jours sans participation ou participation partielle" "010" 1 2 3 0 0 4
+run_test "Augmentation de la série : perte de trois vies à plusieurs jours d'intervales" "011" 1 2 3 0 0 4 5 6 7 0 8
+run_test "Perte de série : faire plus de 3 jours sans exercice" "012" 1 2 3 0 0 0 1
 
 # Résumé des tests
 if [[ $failed_tests -eq 0 ]]; then
-    echo -e "\nTous les tests sont réussis"
+    echo -e "\nTous les tests sont réussis\n"
+elif [[ $failed_tests -eq 1 ]]; then
+    echo -e "\n$failed_tests test a échoué\n"
 else
-    echo -e "\n$failed_tests tests ont échoué"
+    echo -e "\n$failed_tests tests ont échoué\n"
 fi
