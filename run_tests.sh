@@ -66,7 +66,7 @@ run_test "Perte de la série : aucun exercice assis et un exercice niveau 1 allo
 run_test "Perte de la série : un exercice niveau 2 assis et un exercice niveau 1 allongé" "007" 0 0 0
 run_test "Perte de la série : un exercice niveau 1 assis et un exercice niveau 2 allongé" "008" 0 0 0
 run_test "Vérification : réinitialisation des exercices d'un jour à l'autre" "009" 0 0 0
-run_test "Vérification : exercice tard le soir et tôt le matin ne comptent pas comme même jour" "010" 0 0 1
+run_test "Vérification : exercice tard le soir et tôt le matin ne comptent pas comme même jour" "010" 0 0
 run_test "Vérification : une série ne peut pas être incrémentée deux fois le même jour" "011" 1 2 3
 
 echo -e "\nPARTIE 2: Vérification du système de vie sur plusieurs jours\n"
