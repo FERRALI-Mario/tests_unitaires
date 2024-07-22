@@ -75,16 +75,11 @@ do
         if [[ ${users[$uuid,life_counter_started]} -eq 1 ]]; then
             # Décrémenter les vies en fonction des jours passés
             for ((i = 1; i <= days_passed; i++)); do
-                if (( users[$uuid,vies] > 0 )); then
-                    ((users[$uuid,vies]--))
-                fi
+                (( users[$uuid,vies] > 0 )) && ((users[$uuid,vies]--))
             done
 
             # Si toutes les vies sont perdues, réinitialiser la série et les vies
-            if (( users[$uuid,vies] <= 0 )); then
-                users[$uuid,serie]=0
-                users[$uuid,vies]=$max_vies
-            fi
+            (( users[$uuid,vies] <= 0 )) && users[$uuid,serie]=0 && users[$uuid,vies]=$max_vies
         fi
         users[$uuid,life_counter_started]=1
         users[$uuid,increment_done]=0
