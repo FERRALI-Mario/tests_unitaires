@@ -53,6 +53,8 @@ run_test() {
 }
 
 # Exécuter les tests
+# Les chiffres après l'id (ex: 001) sont là pour indiquer les résultats attendus de la série
+# On notera que les 0 sont là pour indiquer un serie à 0 ou alors une non participation 
 echo -e "Exécution des tests...\n"
 echo -e "PARTIE 1: Vérification des séries de base\n"
 run_test "Augmentation de la série : un exercice niveau 2 assis et un exercice niveau 2 allongé" "001" 1 2 3
@@ -63,12 +65,13 @@ run_test "Perte de la série : un exercice niveau 1 assis et aucun exercice allo
 run_test "Perte de la série : aucun exercice assis et un exercice niveau 1 allongé" "006" 0 0 0
 run_test "Perte de la série : un exercice niveau 2 assis et un exercice niveau 1 allongé" "007" 0 0 0
 run_test "Perte de la série : un exercice niveau 1 assis et un exercice niveau 2 allongé" "008" 0 0 0
-run_test "Vérification : qu'une série ne peut pas être incrémentée deux fois le même jour" "009" 1 2 3
+run_test "Vérification : réinitialisation des exercices d'un jour à l'autre" "009" 0 0
+run_test "Vérification : une série ne peut pas être incrémentée deux fois le même jour" "010" 1 2 3
 
 echo -e "\nPARTIE 2: Vérification du système de vie sur plusieurs jours\n"
-run_test "Augmentation de la série : faire deux jours sans participation ou participation partielle" "010" 1 2 3 0 0 4
-run_test "Augmentation de la série : perte de trois vies à plusieurs jours d'intervales" "011" 1 2 3 0 0 4 5 6 7 0 8
-run_test "Perte de série : faire plus de 3 jours sans exercice" "012" 1 2 3 0 0 0 1
+run_test "Augmentation de la série : deux jours sans participation ou participation partielle puis reprise" "011" 1 2 3 0 0 4
+run_test "Augmentation de la série : perte de plusieurs jours pour verifier l'incrémentation des vies" "012" 1 2 3 0 0 4 5 6 7 0 8
+run_test "Perte de série : plus de trois jours sans exercice pour vérifier le nombre max de vie et le gain de vie tous les cinq jours" "013" 1 2 3 0 0 0 1
 
 # Résumé des tests
 if [[ $failed_tests -eq 0 ]]; then

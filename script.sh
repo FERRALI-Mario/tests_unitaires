@@ -70,7 +70,7 @@ do
  # Si plus d'un jour s'est écoulé, vérifier la perte de vies
     if (( days_passed > 0 )); then
         if [[ "$uuid" == "012" ]]; then
-            echo "$days_passed"
+            echo ${users[$uuid,life_counter_started]}
         fi
         if [[ ${users[$uuid,life_counter_started]} -eq 1 ]]; then
             # Décrémenter les vies en fonction des jours passés
