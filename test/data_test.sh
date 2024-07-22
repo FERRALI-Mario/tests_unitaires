@@ -5,6 +5,12 @@ output_file="test/data_test.csv"
 # Initialiser le fichier de test avec l'en-tête
 echo "\"Date\",\"Niveau\",\"Allonge\",\"Assis\",\"SessionID\",\"formattedDate\"" > "$output_file"
 
+# Test pour les exercices tard le soir et tôt le matin
+timestamp_evening=$((1618937885 + 10 * 60 * 60 * 24 - 60 * 60))
+timestamp_morning=$((1618937885 + 11 * 60 * 60 * 24))
+formatted_date_evening=$(date -d @$timestamp_evening +"%d-%m-%Y")
+formatted_date_morning=$(date -d @$timestamp_morning +"%d-%m-%Y")
+
 # Générer des données fictives pour 11 jours
 for day in {1..11}; do
     timestamp=$((1618937885 + (day - 1) * 60 * 60 * 24))
@@ -47,23 +53,35 @@ for day in {1..11}; do
         echo "\"$timestamp\",\"2\",\"True\",\"False\",\"008\",\"$formatted_date\"" >> "$output_file"
 
         # Condition 9: Vérifier la réinitialisation des exercices d'un jour à l'autre
+        # Condition 10: Vérifier que l'heure de la pratique n'influence pas les séries
         if [[ $day -eq 1 ]]; then
-            echo "\"$timestamp\",\"2\",\"False\",\"True\",\"009\",\"$formatted_date\"" >> "$output_file" # Exercice niveau 2 assis
+            # 2 exercices niveau 1 assis
+            echo "\"$timestamp\",\"1\",\"False\",\"True\",\"009\",\"$formatted_date\"" >> "$output_file"
+            echo "\"$timestamp\",\"1\",\"False\",\"True\",\"009\",\"$formatted_date\"" >> "$output_file"
+            # 1 exercice niveau 2 assis fait le soir 
+            echo "\"$timestamp_evening\",\"2\",\"False\",\"True\",\"010\",\"$formatted_date_evening\"" >> "$output_file"
         elif [[ $day -eq 2 ]]; then
-            echo "\"$timestamp\",\"2\",\"True\",\"False\",\"009\",\"$formatted_date\"" >> "$output_file" # Exercice niveau 2 allongé
+            # 2 exercices niveau 1 allongé
+            echo "\"$timestamp\",\"1\",\"True\",\"False\",\"009\",\"$formatted_date\"" >> "$output_file"
+            echo "\"$timestamp\",\"1\",\"True\",\"False\",\"009\",\"$formatted_date\"" >> "$output_file"
+            # 1 exercice niveau 2 allongé fait le soir 
+            echo "\"$timestamp_morning\",\"2\",\"True\",\"False\",\"010\",\"$formatted_date_morning\"" >> "$output_file"
+        else :
+            # 1 exercice niveau 2 assis
+            echo "\"$timestamp\",\"2\",\"False\",\"True\",\"009\",\"$formatted_date\"" >> "$output_file"
         fi
 
-        # Condition 10: Vérifier qu'une série ne peut pas être incrémentée deux fois le même jour
-        echo "\"$timestamp\",\"2\",\"False\",\"True\",\"010\",\"$formatted_date\"" >> "$output_file"
-        echo "\"$timestamp\",\"2\",\"True\",\"False\",\"010\",\"$formatted_date\"" >> "$output_file"
+        # Condition 11: Vérifier qu'une série ne peut pas être incrémentée deux fois le même jour
+        echo "\"$timestamp\",\"2\",\"False\",\"True\",\"011\",\"$formatted_date\"" >> "$output_file"
+        echo "\"$timestamp\",\"2\",\"True\",\"False\",\"011\",\"$formatted_date\"" >> "$output_file"
         # Répéter les exercices pour le même jour
-        echo "\"$timestamp\",\"2\",\"False\",\"True\",\"010\",\"$formatted_date\"" >> "$output_file"
-        echo "\"$timestamp\",\"2\",\"True\",\"False\",\"010\",\"$formatted_date\"" >> "$output_file"
+        echo "\"$timestamp\",\"2\",\"False\",\"True\",\"011\",\"$formatted_date\"" >> "$output_file"
+        echo "\"$timestamp\",\"2\",\"True\",\"False\",\"011\",\"$formatted_date\"" >> "$output_file"
 
         # Générer des données pour les tests du système de vie sur plusieurs jours
-        echo "\"$timestamp\",\"2\",\"True\",\"True\",\"011\",\"$formatted_date\"" >> "$output_file"
         echo "\"$timestamp\",\"2\",\"True\",\"True\",\"012\",\"$formatted_date\"" >> "$output_file"
         echo "\"$timestamp\",\"2\",\"True\",\"True\",\"013\",\"$formatted_date\"" >> "$output_file"
+        echo "\"$timestamp\",\"2\",\"True\",\"True\",\"014\",\"$formatted_date\"" >> "$output_file"
     fi
 
     # Générer des données pour les tests du système de vie sur plusieurs jours
@@ -74,29 +92,29 @@ for day in {1..11}; do
         6)
             # Jour 6
             # 1 exercice niveau 2 assis et 1 exercice niveau 2 allongé pour conserver la série et vie
-            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"011\",\"$formatted_date\"" >> "$output_file"
             echo "\"$timestamp\",\"2\",\"True\",\"True\",\"012\",\"$formatted_date\"" >> "$output_file"
+            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"013\",\"$formatted_date\"" >> "$output_file"
             # Aucun exercice pour tester la perte de vie et de la série (12)
             ;;
         7)
             # Jour 7: 1 exercice niveau 2 assis et 1 exercice niveau 2 allongé pour conserver la série et vie
-            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"012\",\"$formatted_date\"" >> "$output_file"
+            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"013\",\"$formatted_date\"" >> "$output_file"
             ;;
         8)
             # Jour 8: 1 exercice niveau 2 assis et 1 exercice niveau 2 allongé pour conserver la série et vie
-            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"012\",\"$formatted_date\"" >> "$output_file"
             echo "\"$timestamp\",\"2\",\"True\",\"True\",\"013\",\"$formatted_date\"" >> "$output_file"
+            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"014\",\"$formatted_date\"" >> "$output_file"
             ;;
         9)
             # Jour 9: 1 exercice niveau 2 assis et 1 exercice niveau 2 allongé pour conserver la série et vie
-            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"012\",\"$formatted_date\"" >> "$output_file"
+            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"013\",\"$formatted_date\"" >> "$output_file"
             ;;
         10)
             # Jour 10: Aucun exercice pour tester la perte de vie
             ;;
         11)
             # Jour 11: 1 exercice niveau 2 assis et 1 exercice niveau 2 allongé pour conserver la série et vie
-            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"012\",\"$formatted_date\"" >> "$output_file"
+            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"013\",\"$formatted_date\"" >> "$output_file"
             ;;
     esac
 done

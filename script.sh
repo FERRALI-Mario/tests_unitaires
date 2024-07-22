@@ -51,27 +51,27 @@ initialize_user() {
 
 # Lire le fichier CSV ligne par ligne en ignorant l'en-tête
 current_line=0
-tail -n +2 "$input_file" | while IFS=',' read -r timestamp niveau assis allonge uuid date
+tail -n +2 "$input_file" | while IFS=',' read -r timestamp niveau allonge assis uuid formattedDate
 do
     # Nettoyer les champs
     timestamp=${timestamp//\"/}
     niveau=${niveau//\"/}
-    assis=${assis//\"/}
     allonge=${allonge//\"/}
+    assis=${assis//\"/}
     uuid=${uuid//\"/}
-    date=${date//\"/}
+    formattedDate=${formattedDate//\"/}
 
     # Initialiser les variables pour chaque utilisateur si elles n'existent pas
     [[ -z "${users[$uuid,vies]}" ]] && initialize_user "$uuid"
 
-    # Calculer le nombre de jours écoulés depuis la dernière activité
-    days_passed=$(( (timestamp - users[$uuid,last_timestamp]) / seconds_in_a_day ))
+    # Calculer le début du jour actuel en timestamp
+    day_start=$(date -d "$(date -d "@$timestamp" +"%Y-%m-%d") 00:00:00" +"%s")
 
- # Si plus d'un jour s'est écoulé, vérifier la perte de vies
+    # Calculer le nombre de jours écoulés depuis la dernière activité
+    days_passed=$(( (day_start - users[$uuid,last_timestamp]) / seconds_in_a_day ))
+
+    # Si plus d'un jour s'est écoulé, vérifier la perte de vies
     if (( days_passed > 0 )); then
-        if [[ "$uuid" == "012" ]]; then
-            echo ${users[$uuid,life_counter_started]}
-        fi
         if [[ ${users[$uuid,life_counter_started]} -eq 1 ]]; then
             # Décrémenter les vies en fonction des jours passés
             for ((i = 1; i <= days_passed; i++)); do
@@ -116,10 +116,10 @@ do
     fi
 
     # Mettre à jour le dernier timestamp de pratique pour l'utilisateur
-    users[$uuid,last_timestamp]=$timestamp
+    users[$uuid,last_timestamp]=$day_start
 
     # Enregistrer les résultats avec la série calculée en ajoutant des guillemets
-    echo "\"$timestamp\",\"$niveau\",\"$allonge\",\"$assis\",\"$uuid\",\"$date\",\"${users[$uuid,serie]}\"" >> "$output_file"
+    echo "\"$timestamp\",\"$niveau\",\"$allonge\",\"$assis\",\"$uuid\",\"$formattedDate\",\"${users[$uuid,serie]}\"" >> "$output_file"
 
     # Mettre à jour la barre de progression
     ((current_line++))
