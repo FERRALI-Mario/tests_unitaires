@@ -1,6 +1,6 @@
 #!/bin/bash
 
-output_file="tests/data_test.csv"
+output_file="test/data_test.csv"
 
 # Initialiser le fichier de test avec l'en-tête
 echo "\"Date\",\"Niveau\",\"Allonge\",\"Assis\",\"SessionID\",\"formattedDate\"" > "$output_file"
