@@ -80,28 +80,40 @@ for day in {1..11}; do
         echo "\"$timestamp\",\"2\",\"True\",\"True\",\"012\",\"$formatted_date\"" >> "$output_file"
         echo "\"$timestamp\",\"2\",\"True\",\"True\",\"013\",\"$formatted_date\"" >> "$output_file"
         echo "\"$timestamp\",\"2\",\"True\",\"True\",\"014\",\"$formatted_date\"" >> "$output_file"
+        echo "\"$timestamp\",\"2\",\"True\",\"True\",\"015\",\"$formatted_date\"" >> "$output_file"
+
+        # Condition 12: 1 exercices niveau 2 assis et 1 exercices niveau 2 allongé en même temps
+        echo "\"$timestamp\",\"2\",\"True\",\"True\",\"016\",\"$formatted_date\"" >> "$output_file"
     fi
 
     # Générer des données pour les tests du système de vie sur plusieurs jours
     case $day in
-        4|5)
-            # Jour 4/5 : Aucun exercice pour tester la perte de vie (tous)
+        4)
+            # Jour 4 : Aucun exercice pour tester la perte d'une vie (tous)
+            ;;
+        5)
+            # Jour 5
+            # 1 exercice niveau 2 assis et 1 exercice niveau 2 allongé pour conserver la série et vie
+            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"012\",\"$formatted_date\"" >> "$output_file"
+            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"013\",\"$formatted_date\"" >> "$output_file"
+            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"015\",\"$formatted_date\"" >> "$output_file"
+            # Aucun exercice pour tester la perte de vie et de la série (14)
             ;;
         6)
             # Jour 6
             # 1 exercice niveau 2 assis et 1 exercice niveau 2 allongé pour conserver la série et vie
-            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"012\",\"$formatted_date\"" >> "$output_file"
             echo "\"$timestamp\",\"2\",\"True\",\"True\",\"013\",\"$formatted_date\"" >> "$output_file"
-            # Aucun exercice pour tester la perte de vie et de la série (12)
+            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"015\",\"$formatted_date\"" >> "$output_file"
             ;;
         7)
             # Jour 7: 1 exercice niveau 2 assis et 1 exercice niveau 2 allongé pour conserver la série et vie
             echo "\"$timestamp\",\"2\",\"True\",\"True\",\"013\",\"$formatted_date\"" >> "$output_file"
+            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"014\",\"$formatted_date\"" >> "$output_file"
             ;;
         8)
             # Jour 8: 1 exercice niveau 2 assis et 1 exercice niveau 2 allongé pour conserver la série et vie
             echo "\"$timestamp\",\"2\",\"True\",\"True\",\"013\",\"$formatted_date\"" >> "$output_file"
-            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"014\",\"$formatted_date\"" >> "$output_file"
+            echo "\"$timestamp\",\"2\",\"True\",\"True\",\"015\",\"$formatted_date\"" >> "$output_file"
             ;;
         9)
             # Jour 9: 1 exercice niveau 2 assis et 1 exercice niveau 2 allongé pour conserver la série et vie

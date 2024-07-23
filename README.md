@@ -8,6 +8,8 @@ Voici le README complet avec les sections demandées :
 
 Ce projet contient un script Bash pour traiter un fichier CSV d'exercices et calculer des séries pour chaque utilisateur. Il inclut également des scripts de génération de données de test et de tests unitaires pour vérifier le bon fonctionnement du script principal.
 
+Lien du github : *https://github.com/FERRALI-Mario/tests_unitaires*
+
 ## Contenu
 
 - `script.sh` : Le script principal qui lit les données du fichier CSV, traite les exercices et calcule les séries.
@@ -30,7 +32,7 @@ Ouvrez un terminal et rendez les scripts exécutables en exécutant les commande
 
 ```bash
 chmod +x script.sh
-chmod +x generate_test_data.sh
+chmod +x test/data_test.sh
 chmod +x run_tests.sh
 ```
 
@@ -68,3 +70,7 @@ Un résumé des tests sera affiché à la fin, indiquant si tous les tests sont 
 En suivant ces instructions, vous pourrez générer des données de test, exécuter le script principal et vérifier les résultats à l'aide des tests unitaires.
 
 ---
+
+### Contributeur
+
+[FERRALI Mario](https://www.linkedin.com/in/mario-ferrali-60a6251a1/)
