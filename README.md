@@ -1,7 +1,3 @@
-Voici le README complet avec les sections demandées :
-
----
-
 # Test de Script Bash pour Calculer des Séries d'Exercices
 
 ## Description
